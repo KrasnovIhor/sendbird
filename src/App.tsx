@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ReactElement } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import './App.scss';
+import { Login } from './components/Login/Login';
+import { Navigate, Route, Routes } from 'react-router';
+import { Home } from './components/Home/Home';
+import { useSendbirdInstance } from './hooks/useSendbirdInstance';
+
+const App = (): ReactElement => {
+	const { currentUser } = useSendbirdInstance();
+	const isAuth = !!currentUser;
+
+	return (
+		<div className='App'>
+			<Routes>
+				<Route path='/home' element={isAuth ? <Home /> : <Navigate to='/login' />} />
+				<Route path='/' element={isAuth ? <Navigate to='/home' /> : <Navigate to='/login' />} />
+				<Route path='/login' element={isAuth ? <Navigate to='/home' /> : <Login />} />
+			</Routes>
+		</div>
+	);
+};
 
 export default App;
