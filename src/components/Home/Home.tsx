@@ -1,15 +1,14 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { OpenChannel } from 'sendbird';
 import { useSendbirdInstance } from '../../hooks/useSendbirdInstance';
 import { Chat } from '../Chat/Chat';
 
 export const Home = (): ReactElement => {
 	const { listOpenChannels } = useSendbirdInstance();
-	const [channels, setChannels] = useState<OpenChannel[]>([]);
+	const [channels, setChannels] = useState<SendBird.OpenChannel[]>([]);
 
 	useEffect(() => {
 		const getChannels = async () => {
-			const chs = (await listOpenChannels()) as OpenChannel[];
+			const chs = (await listOpenChannels()) as SendBird.OpenChannel[];
 			setChannels(chs);
 		};
 

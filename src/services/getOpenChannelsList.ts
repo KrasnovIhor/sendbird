@@ -1,5 +1,3 @@
-import SendBird from 'sendbird';
-
 export const getOpenChannelsList = async (
 	sbInstance: SendBird.SendBirdInstance
 ): Promise<SendBird.OpenChannel[]> => {

@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import SendBird, { SendBirdInstance } from 'sendbird';
+import SendBird from 'sendbird';
 
 type Props = {
 	children: React.ReactElement | React.ReactElement[];
 };
 
 export interface IChatContext {
-	instance: SendBirdInstance;
+	instance: SendBird.SendBirdInstance;
 	connect: (userId?: string) => void;
 	enter: (channelUrl: string) => void;
 	loadUserHandler: (user: string) => void;
@@ -36,11 +36,6 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 			}),
 		[]
 	);
-
-	const subscribeMessages = (subscriber: () => void) => {
-		// create handler
-		// attach that handler instance
-	};
 
 	const connect = useCallback(
 		(userId?: string) => {

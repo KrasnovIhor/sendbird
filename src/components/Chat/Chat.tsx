@@ -15,8 +15,10 @@ export const Chat = ({ channels }: ChatProps): ReactElement => {
 	const { enter } = useSendbirdInstance();
 
 	const handleSelect = async (channel: SendBird.OpenChannel) => {
-		setCurrentChannel(channel);
-		enter(channel.url);
+		if (channel.url !== currentChannel.url) {
+			setCurrentChannel(channel);
+			enter(channel.url);
+		}
 	};
 	return (
 		<Container className={styles.root}>
@@ -35,7 +37,7 @@ export const Chat = ({ channels }: ChatProps): ReactElement => {
 					</ListGroup>
 				</Col>
 				<Col xs={10}>
-					<Messages channelUrl={currentChannel.url} />
+					<Messages channel={currentChannel} />
 				</Col>
 			</Row>
 		</Container>
