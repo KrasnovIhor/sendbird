@@ -11,6 +11,7 @@ export interface IChatContext {
 	enter: (channelUrl: string) => void;
 	loadUserHandler: (user: string) => void;
 	currentUser: string | null;
+	currentOpenChannel: SendBird.OpenChannel;
 }
 
 export const ChatContext = React.createContext<IChatContext>({} as IChatContext);
@@ -18,6 +19,9 @@ export const ChatContext = React.createContext<IChatContext>({} as IChatContext)
 export const ChatProvider = ({ children }: Props): React.ReactElement => {
 	const userData = window.localStorage.getItem('USER_DATA');
 	const [currentUser, setCurrentUser] = useState(userData);
+	const [currentOpenChannel, setCurrentOpenChannel] = useState<SendBird.OpenChannel>(
+		{} as SendBird.OpenChannel
+	);
 
 	const loadUser = (user: string) => {
 		setCurrentUser(user);
@@ -41,7 +45,7 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 		(userId?: string) => {
 			let id: string;
 			const userDataString = currentUser;
-			id = userDataString && !userId ? JSON.parse(userDataString).id : userId;
+			id = userDataString && !userId ? JSON.parse(userDataString).userId : userId;
 
 			try {
 				if (id) {
@@ -51,7 +55,7 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 							return error.message;
 						}
 
-						const userString = JSON.stringify({ id: user.userId, nickname: user.nickname });
+						const userString = JSON.stringify({ ...user });
 
 						loadUserHandler(userString);
 					});
@@ -70,6 +74,7 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 					alert(error.message);
 					return error.message;
 				}
+				setCurrentOpenChannel(openChannel);
 
 				openChannel.enter((_, error) => {
 					if (error) {
@@ -89,8 +94,9 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 			enter,
 			loadUserHandler,
 			currentUser,
+			currentOpenChannel,
 		}),
-		[instance, connect, enter, loadUserHandler, currentUser]
+		[instance, connect, enter, loadUserHandler, currentUser, currentOpenChannel]
 	);
 
 	useEffect(() => {

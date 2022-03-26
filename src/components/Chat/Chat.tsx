@@ -14,7 +14,7 @@ export const Chat = ({ channels }: ChatProps): ReactElement => {
 	const [currentChannel, setCurrentChannel] = useState({} as SendBird.OpenChannel);
 	const { enter } = useSendbirdInstance();
 
-	const handleSelect = async (channel: SendBird.OpenChannel) => {
+	const handleSelect = (channel: SendBird.OpenChannel) => {
 		if (channel.url !== currentChannel.url) {
 			setCurrentChannel(channel);
 			enter(channel.url);

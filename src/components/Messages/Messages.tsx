@@ -2,6 +2,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
 import SendBird, { OpenChannel } from 'sendbird';
 import { useSendbirdInstance } from '../../hooks/useSendbirdInstance';
+import { Message } from '../../uikit/Message/Message';
 import { SendMessage } from '../SendMessage/SendMessage';
 
 import styles from './Messages.module.scss';
@@ -14,12 +15,12 @@ export type ChatMessage = SendBird.AdminMessage | SendBird.UserMessage | SendBir
 
 export const Messages = ({ channel }: MessagesProps): ReactElement => {
 	const { subscribeMessages, unsubscribeHandler, loadPrevMessages } = useSendbirdInstance();
-	const [messages, setMessages] = useState<any[]>([]);
+	const [messages, setMessages] = useState<ChatMessage[]>([]);
 
 	useEffect(() => {
 		subscribeMessages('test', (_, message) => {
 			if (message) {
-				setMessages((prev) => [...prev, message]);
+				setMessages([message]);
 			}
 		});
 
@@ -30,7 +31,7 @@ export const Messages = ({ channel }: MessagesProps): ReactElement => {
 					return;
 				}
 
-				setMessages((prev) => [...prev, ...messageList]);
+				setMessages([...messageList]);
 			});
 		}
 
@@ -44,9 +45,9 @@ export const Messages = ({ channel }: MessagesProps): ReactElement => {
 			{channel.url && (
 				<div>
 					<Image src={channel.coverUrl} alt='open channel cover image' />
-					<div>
+					<div className={styles.messages}>
 						{messages.map((message) => (
-							<p key={message.messageId}>{message.message}</p>
+							<Message message={message} key={message.messageId} />
 						))}
 					</div>
 					<SendMessage />

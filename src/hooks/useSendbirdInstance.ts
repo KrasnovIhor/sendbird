@@ -1,4 +1,4 @@
-import SendBird from 'sendbird';
+import { sendMessage } from './../services/sendMessage';
 import { ChatContext } from '../providers/ChatProvider';
 import { useContext, useCallback } from 'react';
 import { getOpenChannelsList } from '../services/getOpenChannelsList';
@@ -6,7 +6,7 @@ import { RetrieveMessageHandler, retrieveMessages } from '../services/retrieveMe
 import { subscribe, Subscriber } from '../services/subscribe';
 
 export const useSendbirdInstance = () => {
-	const { connect, instance, enter, currentUser } = useContext(ChatContext);
+	const { connect, instance, enter, currentUser, currentOpenChannel } = useContext(ChatContext);
 
 	const listOpenChannels = useCallback(async () => {
 		if (instance) {
@@ -38,11 +38,16 @@ export const useSendbirdInstance = () => {
 		[instance]
 	);
 
+	const sendUserMessage = async (message: string) => {
+		return await sendMessage(instance, currentOpenChannel, message);
+	};
+
 	return {
 		connect,
 		listOpenChannels,
 		enter,
 		currentUser,
+		sendUserMessage,
 		subscribeMessages,
 		unsubscribeHandler,
 		loadPrevMessages,

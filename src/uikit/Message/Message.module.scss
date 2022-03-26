@@ -1,0 +1,20 @@
+.root {
+	&:not(:last-of-type) {
+		margin-bottom: 1rem;
+	}
+
+	img {
+		max-width: 50% !important;
+	}
+
+	.admin {
+		background-color: #fff2b6;
+	}
+
+	.sender {
+		display: block;
+		font-size: 14px;
+		color: gray;
+		margin-bottom: 1rem;
+	}
+}
