@@ -7,7 +7,6 @@ import { ChatProvider } from './providers/ChatProvider';
 import App from './App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.scss';
 
 ReactDOM.render(
 	<React.StrictMode>
