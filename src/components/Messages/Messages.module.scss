@@ -1,4 +1,9 @@
 .root {
+	max-height: 50vh;
+	min-height: 10rem;
+	overflow-y: auto;
+	margin-bottom: 2rem;
+
 	img {
 		max-width: 100px;
 	}

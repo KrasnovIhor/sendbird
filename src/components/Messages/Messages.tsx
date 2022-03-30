@@ -1,58 +1,55 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useSubscription, useLoadPrevMessages } from 'hooks';
+
+import { ChatContext } from 'providers';
+
+import { Message } from 'uikit';
+import { SendMessage } from 'components';
+
+import { ChatMessage } from 'types';
+
 import { Image } from 'react-bootstrap';
-import SendBird, { OpenChannel } from 'sendbird';
-import { useSendbirdInstance } from '../../hooks/useSendbirdInstance';
-import { Message } from '../../uikit/Message/Message';
-import { SendMessage } from '../SendMessage/SendMessage';
 
 import styles from './Messages.module.scss';
 
-interface MessagesProps {
-	channel: OpenChannel;
-}
+export const Messages: React.FC = () => {
+	const { subscribe } = useSubscription('receive-subscription');
+	const { currentOpenChannel } = useContext(ChatContext);
+	const { prevMessages } = useLoadPrevMessages();
 
-export type ChatMessage = SendBird.AdminMessage | SendBird.UserMessage | SendBird.FileMessage;
-
-export const Messages = ({ channel }: MessagesProps): ReactElement => {
-	const { subscribeMessages, unsubscribeHandler, loadPrevMessages } = useSendbirdInstance();
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
 
 	useEffect(() => {
-		subscribeMessages('test', (_, message) => {
+		subscribe((_, message) => {
 			if (message) {
-				setMessages([message]);
+				setMessages((prev) => [...prev, message]);
 			}
 		});
 
-		if (channel.url) {
-			loadPrevMessages(channel.url, (messageList, error) => {
-				if (error) {
-					alert(error.message);
-					return;
-				}
+		setMessages(prevMessages);
+	}, [subscribe, prevMessages]);
 
-				setMessages([...messageList]);
-			});
+	const onMessageSendHandler = (message: ChatMessage | undefined) => {
+		if (message) {
+			setMessages((prev) => [...prev, message]);
 		}
-
-		return () => {
-			unsubscribeHandler('test');
-		};
-	}, [subscribeMessages, unsubscribeHandler, channel, loadPrevMessages, channel.url]);
+	};
 
 	return (
-		<div className={styles.root}>
-			{channel.url && (
-				<div>
-					<Image src={channel.coverUrl} alt='open channel cover image' />
-					<div className={styles.messages}>
-						{messages.map((message) => (
-							<Message message={message} key={message.messageId} />
-						))}
+		<>
+			<div className={styles.root}>
+				{currentOpenChannel.url && (
+					<div>
+						<Image src={currentOpenChannel.coverUrl} alt='open channel cover image' />
+						<div className={styles.messages}>
+							{messages.map((message) => (
+								<Message message={message} key={message.messageId} />
+							))}
+						</div>
 					</div>
-					<SendMessage />
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+			<SendMessage onSubmit={onMessageSendHandler} />
+		</>
 	);
 };

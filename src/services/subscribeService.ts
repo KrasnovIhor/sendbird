@@ -1,9 +1,11 @@
+import { ChatMessage } from 'types';
+
 export type Subscriber = (
 	channel: SendBird.OpenChannel | SendBird.GroupChannel,
-	message: SendBird.AdminMessage | SendBird.UserMessage | SendBird.FileMessage
+	message: ChatMessage
 ) => void;
 
-export const subscribe = (
+export const subscribeService = (
 	sb: SendBird.SendBirdInstance,
 	handlerId: string,
 	subscriber: Subscriber

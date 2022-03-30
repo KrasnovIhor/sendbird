@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { BrowserRouter } from 'react-router-dom';
-import { ChatProvider } from './providers/ChatProvider';
+import { ChatProvider } from 'providers';
 
 import App from './App';
 

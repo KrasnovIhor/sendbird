@@ -1,6 +1,4 @@
-import { SendBirdInstance } from 'sendbird';
-
-export const enterChannel = (sb: SendBirdInstance, channelUrl: string) => {
+export const enterChannel = (sb: SendBird.SendBirdInstance, channelUrl: string) => {
 	sb.OpenChannel.getChannel(channelUrl, (openChannel, error) => {
 		if (error) {
 			alert(error.message);

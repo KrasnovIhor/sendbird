@@ -1,34 +1,33 @@
-import { ReactElement, useState } from 'react';
+import { useContext } from 'react';
+import { useOpenChannels, useSendbirdInstance } from 'hooks';
+
+import { ChatContext } from 'providers';
+
+import { Messages } from 'components';
+
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
-import SendBird from 'sendbird';
-import { useSendbirdInstance } from '../../hooks/useSendbirdInstance';
-import { Messages } from '../Messages/Messages';
 
 import styles from './Chat.module.scss';
 
-interface ChatProps {
-	channels: SendBird.OpenChannel[];
-}
-
-export const Chat = ({ channels }: ChatProps): ReactElement => {
-	const [currentChannel, setCurrentChannel] = useState({} as SendBird.OpenChannel);
+export const Chat: React.FC = () => {
+	const { currentOpenChannel } = useContext(ChatContext);
 	const { enter } = useSendbirdInstance();
+	const { openChannelCollection } = useOpenChannels();
 
 	const handleSelect = (channel: SendBird.OpenChannel) => {
-		if (channel.url !== currentChannel.url) {
-			setCurrentChannel(channel);
+		if (channel.url !== currentOpenChannel.url) {
 			enter(channel.url);
 		}
 	};
 	return (
 		<Container className={styles.root}>
 			<Row>
-				<Col xs={2}>
+				<Col sm={2}>
 					<ListGroup as='ul'>
-						{channels.map((channel) => (
+						{openChannelCollection.map((channel) => (
 							<ListGroup.Item
 								key={channel.url}
-								active={currentChannel.url === channel.url}
+								active={currentOpenChannel.url === channel.url}
 								onClick={handleSelect.bind(null, channel)}
 								as='li'>
 								{channel.name}
@@ -36,9 +35,7 @@ export const Chat = ({ channels }: ChatProps): ReactElement => {
 						))}
 					</ListGroup>
 				</Col>
-				<Col xs={10}>
-					<Messages channel={currentChannel} />
-				</Col>
+				<Col sm={10}>{currentOpenChannel.url && <Messages />}</Col>
 			</Row>
 		</Container>
 	);

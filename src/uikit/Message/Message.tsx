@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { Card, Image } from 'react-bootstrap';
-import { ChatMessage } from '../../components/Messages/Messages';
+
 import cn from 'classnames';
 
 import styles from './Message.module.scss';
+import { ChatMessage } from 'types';
 
 interface MessageProps {
 	message: ChatMessage;

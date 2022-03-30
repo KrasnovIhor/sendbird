@@ -1,4 +1,4 @@
-import { ChatMessage } from '../components/Messages/Messages';
+import { ChatMessage } from 'types';
 
 export type RetrieveMessageHandler = (
 	messageList: ChatMessage[],

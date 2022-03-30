@@ -1,10 +1,11 @@
 import { ReactElement } from 'react';
+import { useSendbirdInstance } from 'hooks';
+
+import { Navigate, Route, Routes } from 'react-router';
+
+import { Home, Login } from 'views';
 
 import './App.scss';
-import { Login } from './components/Login/Login';
-import { Navigate, Route, Routes } from 'react-router';
-import { Home } from './components/Home/Home';
-import { useSendbirdInstance } from './hooks/useSendbirdInstance';
 
 const App = (): ReactElement => {
 	const { currentUser } = useSendbirdInstance();

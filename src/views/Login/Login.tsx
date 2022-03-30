@@ -1,7 +1,7 @@
 import { FormEvent, ReactElement, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useSendbirdInstance } from '../../hooks/useSendbirdInstance';
+import { useSendbirdInstance } from 'hooks';
 import styles from './Login.module.scss';
 
 export const Login = (): ReactElement => {

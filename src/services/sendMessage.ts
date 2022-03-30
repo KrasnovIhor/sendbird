@@ -1,4 +1,4 @@
-import { ChatMessage } from '../components/Messages/Messages';
+import { ChatMessage } from 'types';
 
 export const sendMessage = async (
 	sb: SendBird.SendBirdInstance,
@@ -9,7 +9,7 @@ export const sendMessage = async (
 
 	params.message = message;
 
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, reject: (error: SendBird.SendBirdError) => void) => {
 		channel.sendUserMessage(params, (userMessage, error) => {
 			if (error) reject(error);
 

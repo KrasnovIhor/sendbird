@@ -1,34 +1,43 @@
 import { FormEvent, ReactElement, useState } from 'react';
 import { Button, Col, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { useSendbirdInstance } from '../../hooks/useSendbirdInstance';
+import { useSendbirdInstance } from 'hooks';
+import { ChatMessage } from 'types';
 
 import styles from './SendMessage.module.scss';
 
-export const SendMessage = (): ReactElement => {
+interface SendMessageProps {
+	onSubmit?: (message: ChatMessage | undefined) => void;
+}
+
+export const SendMessage: React.FC<SendMessageProps> = ({ onSubmit }): ReactElement => {
 	const [message, setMessage] = useState('');
 	const { sendUserMessage } = useSendbirdInstance();
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		await sendUserMessage(message);
+		const myMessage = await sendUserMessage(message);
+
+		onSubmit?.(myMessage);
+
 		setMessage('');
 	};
 
 	return (
 		<form onSubmit={handleSubmit} className={styles.form}>
 			<Row>
-				<Col xs={10}>
+				<Col sm={10}>
 					<InputGroup>
 						<FormControl
 							onChange={(e) => setMessage(e.target.value)}
 							value={message}
-							as='textarea'
+							as='input'
+							type='text'
 							aria-label='With textarea'
 						/>
 					</InputGroup>{' '}
 				</Col>
-				<Col xs={2}>
+				<Col sm={2}>
 					<Button type='submit' variant='primary'>
 						Send
 					</Button>

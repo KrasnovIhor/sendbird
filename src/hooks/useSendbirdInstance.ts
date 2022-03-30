@@ -1,33 +1,11 @@
-import { sendMessage } from './../services/sendMessage';
-import { ChatContext } from '../providers/ChatProvider';
 import { useContext, useCallback } from 'react';
-import { getOpenChannelsList } from '../services/getOpenChannelsList';
-import { RetrieveMessageHandler, retrieveMessages } from '../services/retrieveMessages';
-import { subscribe, Subscriber } from '../services/subscribe';
+
+import { ChatContext } from 'providers';
+
+import { retrieveMessages, RetrieveMessageHandler, sendMessage } from 'services';
 
 export const useSendbirdInstance = () => {
 	const { connect, instance, enter, currentUser, currentOpenChannel } = useContext(ChatContext);
-
-	const listOpenChannels = useCallback(async () => {
-		if (instance) {
-			connect();
-			return await getOpenChannelsList(instance);
-		}
-	}, [instance, connect]);
-
-	const subscribeMessages = useCallback(
-		(handlerId: string, subscriber: Subscriber) => {
-			subscribe(instance, handlerId, subscriber);
-		},
-		[instance]
-	);
-
-	const unsubscribeHandler = useCallback(
-		(handlerId: string) => {
-			instance.removeChannelHandler(handlerId);
-		},
-		[instance]
-	);
 
 	const loadPrevMessages = useCallback(
 		async (channelUrl: string, handler: RetrieveMessageHandler) => {
@@ -39,17 +17,18 @@ export const useSendbirdInstance = () => {
 	);
 
 	const sendUserMessage = async (message: string) => {
-		return await sendMessage(instance, currentOpenChannel, message);
+		try {
+			return await sendMessage(instance, currentOpenChannel, message);
+		} catch (error: any) {
+			alert(error);
+		}
 	};
 
 	return {
 		connect,
-		listOpenChannels,
 		enter,
 		currentUser,
 		sendUserMessage,
-		subscribeMessages,
-		unsubscribeHandler,
 		loadPrevMessages,
 	};
 };

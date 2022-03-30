@@ -9,7 +9,6 @@ export interface IChatContext {
 	instance: SendBird.SendBirdInstance;
 	connect: (userId?: string) => void;
 	enter: (channelUrl: string) => void;
-	loadUserHandler: (user: string) => void;
 	currentUser: string | null;
 	currentOpenChannel: SendBird.OpenChannel;
 }
@@ -27,10 +26,6 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 		setCurrentUser(user);
 		window.localStorage.setItem('USER_DATA', user);
 	};
-
-	const loadUserHandler = useCallback((userToLoad: string) => {
-		loadUser(userToLoad);
-	}, []);
 
 	const instance = useMemo(
 		() =>
@@ -57,14 +52,14 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 
 						const userString = JSON.stringify({ ...user });
 
-						loadUserHandler(userString);
+						loadUser(userString);
 					});
 				}
 			} catch (error) {
 				alert(error);
 			}
 		},
-		[loadUserHandler, currentUser, instance]
+		[currentUser, instance]
 	);
 
 	const enter = useCallback(
@@ -92,18 +87,17 @@ export const ChatProvider = ({ children }: Props): React.ReactElement => {
 			instance,
 			connect,
 			enter,
-			loadUserHandler,
 			currentUser,
 			currentOpenChannel,
 		}),
-		[instance, connect, enter, loadUserHandler, currentUser, currentOpenChannel]
+		[instance, connect, enter, currentUser, currentOpenChannel]
 	);
 
 	useEffect(() => {
 		if (currentUser) {
-			loadUserHandler(currentUser);
+			loadUser(currentUser);
 		}
-	}, [currentUser, loadUserHandler]);
+	}, [currentUser]);
 
 	return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;
 };
