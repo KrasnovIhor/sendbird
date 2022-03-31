@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useSubscription, useLoadPrevMessages } from 'hooks';
 
 import { ChatContext } from 'providers';
@@ -27,6 +27,10 @@ export const Messages: React.FC = () => {
 		});
 
 		setMessages(prevMessages);
+
+		return () => {
+			console.log('unmounted');
+		};
 	}, [subscribe, prevMessages]);
 
 	const onMessageSendHandler = (message: ChatMessage | undefined) => {

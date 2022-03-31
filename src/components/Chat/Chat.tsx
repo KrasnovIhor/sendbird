@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useOpenChannels, useSendbirdInstance } from 'hooks';
 
 import { ChatContext } from 'providers';
@@ -8,17 +8,29 @@ import { Messages } from 'components';
 import { Col, Container, ListGroup, Row } from 'react-bootstrap';
 
 import styles from './Chat.module.scss';
+import { useNavigate, useParams } from 'react-router';
 
 export const Chat: React.FC = () => {
 	const { currentOpenChannel } = useContext(ChatContext);
 	const { enter } = useSendbirdInstance();
 	const { openChannelCollection } = useOpenChannels();
+	const navigate = useNavigate();
+	const params = useParams();
 
 	const handleSelect = (channel: SendBird.OpenChannel) => {
 		if (channel.url !== currentOpenChannel.url) {
 			enter(channel.url);
+
+			navigate(`/chat/${channel.url}`);
 		}
 	};
+
+	useEffect(() => {
+		if (params.url) {
+			enter(params.url);
+		}
+	}, [enter, params.url]);
+
 	return (
 		<Container className={styles.root}>
 			<Row>

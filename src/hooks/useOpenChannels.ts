@@ -2,9 +2,11 @@ import { useCallback, useContext, useState, useEffect } from 'react';
 import { ChatContext } from 'providers';
 
 import { getOpenChannelsList } from 'services';
+import { useLocation } from 'react-router';
 
 export const useOpenChannels = () => {
 	const { instance, connect } = useContext(ChatContext);
+	const location = useLocation();
 
 	const [openChannelCollection, setOpenChannelCollection] = useState<SendBird.OpenChannel[]>([]);
 
@@ -20,7 +22,7 @@ export const useOpenChannels = () => {
 
 	useEffect(() => {
 		listOpenChannels();
-	}, [listOpenChannels]);
+	}, [listOpenChannels, location.pathname]);
 
 	return { openChannelCollection };
 };
