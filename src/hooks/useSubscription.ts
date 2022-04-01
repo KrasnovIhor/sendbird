@@ -1,5 +1,5 @@
-import { ChatContext } from 'providers';
 import { useCallback, useContext, useEffect } from 'react';
+import { ChatContext } from 'providers';
 import { subscribeService, Subscriber } from 'services';
 
 export const useSubscription = (handlerId: string) => {
@@ -14,8 +14,6 @@ export const useSubscription = (handlerId: string) => {
 
 	useEffect(() => {
 		return () => {
-			console.log('called');
-
 			instance.removeChannelHandler(handlerId);
 		};
 	}, [handlerId, instance]);

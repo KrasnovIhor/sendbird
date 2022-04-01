@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSubscription, useLoadPrevMessages } from 'hooks';
 
 import { ChatContext } from 'providers';
@@ -11,6 +11,7 @@ import { ChatMessage } from 'types';
 import { Image } from 'react-bootstrap';
 
 import styles from './Messages.module.scss';
+import { useChatScroll } from 'hooks/useChatScroll';
 
 export const Messages: React.FC = () => {
 	const { subscribe } = useSubscription('receive-subscription');
@@ -18,6 +19,7 @@ export const Messages: React.FC = () => {
 	const { prevMessages } = useLoadPrevMessages();
 
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
+	const { ref, scrollHandler } = useChatScroll(messages, false);
 
 	useEffect(() => {
 		subscribe((_, message) => {
@@ -27,21 +29,18 @@ export const Messages: React.FC = () => {
 		});
 
 		setMessages(prevMessages);
-
-		return () => {
-			console.log('unmounted');
-		};
 	}, [subscribe, prevMessages]);
 
 	const onMessageSendHandler = (message: ChatMessage | undefined) => {
 		if (message) {
 			setMessages((prev) => [...prev, message]);
+			scrollHandler();
 		}
 	};
 
 	return (
 		<>
-			<div className={styles.root}>
+			<div ref={ref} className={styles.root}>
 				{currentOpenChannel.url && (
 					<div>
 						<Image src={currentOpenChannel.coverUrl} alt='open channel cover image' />
